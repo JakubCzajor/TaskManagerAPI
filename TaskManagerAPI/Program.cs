@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using TaskManagerAPI;
 using TaskManagerAPI.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,13 @@ builder.Services.AddDbContext<TaskManagerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<Seeder>();
+
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
+seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
