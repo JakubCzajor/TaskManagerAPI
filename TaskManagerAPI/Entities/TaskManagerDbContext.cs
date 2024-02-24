@@ -23,5 +23,10 @@ namespace TaskManagerAPI.Entities
                 .Property(c => c.Name)
                 .IsRequired();
         }
+
+        public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
+        {
+            
+        }
     }
 }
