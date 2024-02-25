@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 using TaskManagerAPI;
 using TaskManagerAPI.Entities;
+using TaskManagerAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddDbContext<TaskManagerDbContext>(options =>
 });
 
 builder.Services.AddScoped<Seeder>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
