@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Entities;
+using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Services
@@ -8,6 +9,7 @@ namespace TaskManagerAPI.Services
     public interface ITaskService
     {
         IEnumerable<TaskDto> GetAll();
+        TaskDto GetById(int id);
     }
 
     public class TaskService : ITaskService
@@ -31,6 +33,21 @@ namespace TaskManagerAPI.Services
             var tasksDtos = _mapper.Map<List<TaskDto>>(tasks);
 
             return tasksDtos;
+        }
+
+        public TaskDto GetById(int id)
+        {
+            var task = _context
+                .Tasks
+                .Include(t => t.Category)
+                .FirstOrDefault(t => t.Id == id);
+
+            if (task is null)
+                throw new NotFoundException("Task not found");
+
+            var result = _mapper.Map<TaskDto>(task);
+
+            return result;
         }
     }
 }

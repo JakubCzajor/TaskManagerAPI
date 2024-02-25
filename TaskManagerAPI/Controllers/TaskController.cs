@@ -22,5 +22,13 @@ namespace TaskManagerAPI.Controllers
 
             return Ok(tasksDtos);
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<TaskDto> GetById([FromRoute]int id)
+        {
+            var taskDto = _taskService.GetById(id);
+
+            return Ok(taskDto);
+        }
     }
 }
