@@ -10,6 +10,7 @@ namespace TaskManagerAPI.Services
     {
         IEnumerable<TaskDto> GetAll();
         TaskDto GetById(int id);
+        int CreateTask(CreateTaskDto dto);
     }
 
     public class TaskService : ITaskService
@@ -48,6 +49,29 @@ namespace TaskManagerAPI.Services
             var result = _mapper.Map<TaskDto>(task);
 
             return result;
+        }
+
+        public int CreateTask(CreateTaskDto dto)
+        {
+            //var category = GetCategoryById(dto.CategoryId);
+            var task = _mapper.Map<Entities.Task>(dto);
+            _context.Add(task);
+            _context.SaveChanges();
+
+            return task.Id;
+        }
+
+        private Category GetCategoryById(int categoryId)
+        {
+            var category = _context
+                .Categories
+                .Include(c => c.Name)
+                .FirstOrDefault(c => c.Id == categoryId);
+
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
+            return category;
         }
     }
 }

@@ -24,11 +24,19 @@ namespace TaskManagerAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TaskDto> GetById([FromRoute]int id)
+        public ActionResult<TaskDto> GetById([FromRoute] int id)
         {
             var taskDto = _taskService.GetById(id);
 
             return Ok(taskDto);
+        }
+
+        [HttpPost]
+        public ActionResult CreateTask([FromBody] CreateTaskDto dto)
+        {
+            var id = _taskService.CreateTask(dto);
+
+            return Created($"/api/task/{id}", null);
         }
     }
 }
