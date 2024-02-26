@@ -19,6 +19,23 @@ namespace TaskManagerAPI.Entities
                 .IsRequired()
                 .HasMaxLength(1000);
 
+            modelBuilder.Entity<Task>()
+                .Property(t => t.CreatedDate)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Task>()
+                .Property(t => t.LastModifiedDate)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getdate()");
+
+
+            modelBuilder.Entity<Task>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Tasks)
+                .HasForeignKey(t => t.CategoryId);
+
+
             modelBuilder.Entity<Category>()
                 .Property(c => c.Name)
                 .IsRequired();

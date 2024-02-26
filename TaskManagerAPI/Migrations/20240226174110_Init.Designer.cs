@@ -12,7 +12,7 @@ using TaskManagerAPI.Entities;
 namespace TaskManagerAPI.Migrations
 {
     [DbContext(typeof(TaskManagerDbContext))]
-    [Migration("20240224130839_Init")]
+    [Migration("20240226174110_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -53,16 +53,20 @@ namespace TaskManagerAPI.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("LastModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -71,8 +75,7 @@ namespace TaskManagerAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId")
-                        .IsUnique();
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Tasks");
                 });
@@ -80,8 +83,8 @@ namespace TaskManagerAPI.Migrations
             modelBuilder.Entity("TaskManagerAPI.Entities.Task", b =>
                 {
                     b.HasOne("TaskManagerAPI.Entities.Category", "Category")
-                        .WithOne("Task")
-                        .HasForeignKey("TaskManagerAPI.Entities.Task", "CategoryId")
+                        .WithMany("Tasks")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -90,8 +93,7 @@ namespace TaskManagerAPI.Migrations
 
             modelBuilder.Entity("TaskManagerAPI.Entities.Category", b =>
                 {
-                    b.Navigation("Task")
-                        .IsRequired();
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

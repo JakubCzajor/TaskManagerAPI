@@ -51,7 +51,9 @@ namespace TaskManagerAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -59,7 +61,9 @@ namespace TaskManagerAPI.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -68,8 +72,7 @@ namespace TaskManagerAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId")
-                        .IsUnique();
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Tasks");
                 });
@@ -77,8 +80,8 @@ namespace TaskManagerAPI.Migrations
             modelBuilder.Entity("TaskManagerAPI.Entities.Task", b =>
                 {
                     b.HasOne("TaskManagerAPI.Entities.Category", "Category")
-                        .WithOne("Task")
-                        .HasForeignKey("TaskManagerAPI.Entities.Task", "CategoryId")
+                        .WithMany("Tasks")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -87,8 +90,7 @@ namespace TaskManagerAPI.Migrations
 
             modelBuilder.Entity("TaskManagerAPI.Entities.Category", b =>
                 {
-                    b.Navigation("Task")
-                        .IsRequired();
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

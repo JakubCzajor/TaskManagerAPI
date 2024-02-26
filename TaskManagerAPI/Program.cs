@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Reflection;
@@ -7,6 +8,10 @@ using TaskManagerAPI.Middleware;
 using TaskManagerAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Fluent Validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 // Add services to the container.
 

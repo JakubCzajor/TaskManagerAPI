@@ -32,8 +32,8 @@ namespace TaskManagerAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "getdate()"),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "getdate()"),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -50,8 +50,7 @@ namespace TaskManagerAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_CategoryId",
                 table: "Tasks",
-                column: "CategoryId",
-                unique: true);
+                column: "CategoryId");
         }
 
         /// <inheritdoc />

@@ -10,6 +10,8 @@ namespace TaskManagerAPI
         {
             CreateMap<Entities.Task, TaskDto>()
                 .ForMember(t => t.Category, c => c.MapFrom(s => s.Category.Name));
+
+            CreateMap<CreateTaskDto, Entities.Task>();
         }
     }
 }
