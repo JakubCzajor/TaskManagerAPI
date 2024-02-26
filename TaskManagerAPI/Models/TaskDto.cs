@@ -10,6 +10,6 @@ namespace TaskManagerAPI.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public Category Category { get; set; }
+        public string Category { get; set; }
     }
 }
