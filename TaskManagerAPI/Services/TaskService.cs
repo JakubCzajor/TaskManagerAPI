@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
@@ -11,6 +12,7 @@ namespace TaskManagerAPI.Services
         IEnumerable<TaskDto> GetAll();
         TaskDto GetById(int id);
         int CreateTask(CreateTaskDto dto);
+        void UpdateTask(UpdateTaskDto dto, int id);
     }
 
     public class TaskService : ITaskService
@@ -53,7 +55,7 @@ namespace TaskManagerAPI.Services
 
         public int CreateTask(CreateTaskDto dto)
         {
-            var category = GetCategoryById(dto.CategoryId);
+            findCategoryById(dto.CategoryId);
             var task = _mapper.Map<Entities.Task>(dto);
             _context.Add(task);
             _context.SaveChanges();
@@ -61,7 +63,23 @@ namespace TaskManagerAPI.Services
             return task.Id;
         }
 
-        private Category GetCategoryById(int categoryId)
+        public void UpdateTask(UpdateTaskDto dto, int id)
+        {
+            var task = _context
+                .Tasks
+                .FirstOrDefault(t => t.Id == id);
+
+            if (task is null)
+                throw new NotFoundException("Task not found");
+
+            task.Name = dto.Name;
+            task.Description = dto.Description;
+            task.LastModifiedDate = DateTime.Now;
+
+            _context.SaveChanges();
+        }
+
+        private void findCategoryById(int categoryId)
         {
             var category = _context
                 .Categories
@@ -69,8 +87,6 @@ namespace TaskManagerAPI.Services
 
             if (category is null)
                 throw new NotFoundException("Category not found");
-
-            return category;
         }
     }
 }

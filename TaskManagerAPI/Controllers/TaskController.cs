@@ -38,5 +38,13 @@ namespace TaskManagerAPI.Controllers
 
             return Created($"/api/task/{id}", null);
         }
+
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdateTaskDto dto, [FromRoute] int id)
+        {
+            _taskService.UpdateTask(dto, id);
+
+            return Ok();
+        }
     }
 }
