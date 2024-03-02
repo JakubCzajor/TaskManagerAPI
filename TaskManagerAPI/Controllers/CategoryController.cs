@@ -30,5 +30,13 @@ namespace TaskManagerAPI.Controllers
 
             return Ok(categoryDto);
         }
+
+        [HttpPost]
+        public ActionResult CreateCategory([FromBody] CategoryDto dto)
+        {
+            var id = _categoryService.CreateCategory(dto);
+
+            return Created($"/api/task/{id}", null);
+        }
     }
 }

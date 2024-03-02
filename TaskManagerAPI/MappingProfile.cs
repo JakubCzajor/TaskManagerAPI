@@ -8,12 +8,16 @@ namespace TaskManagerAPI
     {
         public MappingProfile()
         {
+            // Task
             CreateMap<Entities.Task, TaskDto>()
                 .ForMember(t => t.Category, c => c.MapFrom(s => s.Category.Name));
 
             CreateMap<CreateTaskDto, Entities.Task>();
 
+            // Category
             CreateMap<Category, CategoryDto>();
+
+            CreateMap<CategoryDto, Category>();
         }
     }
 }

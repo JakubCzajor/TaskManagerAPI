@@ -10,6 +10,7 @@ namespace TaskManagerAPI.Services
     {
         IEnumerable<CategoryDto> GetAll();
         CategoryDto GetById(int id);
+        int CreateCategory(CategoryDto dto);
     }
 
     public class CategoryService : ICategoryService
@@ -48,5 +49,13 @@ namespace TaskManagerAPI.Services
             return result;
         }
 
+        public int CreateCategory(CategoryDto dto)
+        {
+            var category = _mapper.Map<Category>(dto);
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+
+            return category.Id;
+        }
     }
 }
