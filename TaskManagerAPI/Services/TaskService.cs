@@ -53,7 +53,7 @@ namespace TaskManagerAPI.Services
 
         public int CreateTask(CreateTaskDto dto)
         {
-            //var category = GetCategoryById(dto.CategoryId);
+            var category = GetCategoryById(dto.CategoryId);
             var task = _mapper.Map<Entities.Task>(dto);
             _context.Add(task);
             _context.SaveChanges();
@@ -65,7 +65,6 @@ namespace TaskManagerAPI.Services
         {
             var category = _context
                 .Categories
-                .Include(c => c.Name)
                 .FirstOrDefault(c => c.Id == categoryId);
 
             if (category is null)

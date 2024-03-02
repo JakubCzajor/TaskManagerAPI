@@ -43,7 +43,7 @@ namespace TaskManagerAPI.Entities
 
         public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
         {
-            
+
         }
     }
 }
