@@ -39,6 +39,10 @@ namespace TaskManagerAPI.Entities
             modelBuilder.Entity<Category>()
                 .Property(c => c.Name)
                 .IsRequired();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
         }
 
         public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
