@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using System.Threading.Tasks;
+using System.Data;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
@@ -52,6 +52,12 @@ namespace TaskManagerAPI.Services
         public int CreateCategory(CategoryDto dto)
         {
             var category = _mapper.Map<Category>(dto);
+
+            var categoryAlreadyExists = _context.Categories.FirstOrDefault(c => c.Name == category.Name);
+
+            if (categoryAlreadyExists is not null)
+                throw new BadRequestException($"Category already exists.");
+
             _context.Categories.Add(category);
             _context.SaveChanges();
 

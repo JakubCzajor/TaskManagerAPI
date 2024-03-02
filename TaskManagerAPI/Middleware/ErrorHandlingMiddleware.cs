@@ -12,8 +12,13 @@ namespace TaskManagerAPI.Middleware
             }
             catch(NotFoundException notFoundException)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
                 await context.Response.WriteAsync(notFoundException.Message);
+            }
+            catch(BadRequestException badRequestException)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync(badRequestException.Message);
             }
             catch(Exception e)
             {
