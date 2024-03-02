@@ -13,6 +13,7 @@ namespace TaskManagerAPI.Services
         TaskDto GetById(int id);
         int CreateTask(CreateTaskDto dto);
         void UpdateTask(UpdateTaskDto dto, int id);
+        void DeleteTask(int id);
     }
 
     public class TaskService : ITaskService
@@ -46,7 +47,7 @@ namespace TaskManagerAPI.Services
                 .FirstOrDefault(t => t.Id == id);
 
             if (task is null)
-                throw new NotFoundException("Task not found");
+                throw new NotFoundException("Task not found.");
 
             var result = _mapper.Map<TaskDto>(task);
 
@@ -70,12 +71,25 @@ namespace TaskManagerAPI.Services
                 .FirstOrDefault(t => t.Id == id);
 
             if (task is null)
-                throw new NotFoundException("Task not found");
+                throw new NotFoundException("Task not found.");
 
             task.Name = dto.Name;
             task.Description = dto.Description;
             task.LastModifiedDate = DateTime.Now;
 
+            _context.SaveChanges();
+        }
+
+        public void DeleteTask(int id)
+        {
+            var task = _context
+                .Tasks
+                .FirstOrDefault (t => t.Id == id);
+
+            if (task is null)
+                throw new NotFoundException("Task not found.");
+
+            _context.Remove(task);
             _context.SaveChanges();
         }
 
@@ -86,7 +100,7 @@ namespace TaskManagerAPI.Services
                 .FirstOrDefault(c => c.Id == categoryId);
 
             if (category is null)
-                throw new NotFoundException("Category not found");
+                throw new NotFoundException("Category not found.");
         }
     }
 }

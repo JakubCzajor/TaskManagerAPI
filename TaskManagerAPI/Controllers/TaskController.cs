@@ -40,11 +40,19 @@ namespace TaskManagerAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateTaskDto dto, [FromRoute] int id)
+        public ActionResult UpdateTask([FromBody] UpdateTaskDto dto, [FromRoute] int id)
         {
             _taskService.UpdateTask(dto, id);
 
             return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteTask([FromRoute] int id)
+        {
+            _taskService.DeleteTask(id);
+
+            return NoContent();
         }
     }
 }

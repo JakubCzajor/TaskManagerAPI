@@ -18,7 +18,7 @@ namespace TaskManagerAPI.Middleware
             catch(Exception e)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("Something went wrong");
+                await context.Response.WriteAsync("Something went wrong.");
             }
         }
     }
