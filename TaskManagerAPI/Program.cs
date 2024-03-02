@@ -27,6 +27,7 @@ builder.Services.AddDbContext<TaskManagerDbContext>(options =>
 
 builder.Services.AddScoped<Seeder>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
