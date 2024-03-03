@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
@@ -84,7 +83,7 @@ namespace TaskManagerAPI.Services
         {
             var task = _context
                 .Tasks
-                .FirstOrDefault (t => t.Id == id);
+                .FirstOrDefault(t => t.Id == id);
 
             if (task is null)
                 throw new NotFoundException("Task not found.");

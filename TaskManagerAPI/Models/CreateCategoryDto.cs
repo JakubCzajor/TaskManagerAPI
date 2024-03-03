@@ -2,9 +2,10 @@
 
 namespace TaskManagerAPI.Models
 {
-    public class CategoryDto
+    public class CreateCategoryDto
     {
-        public int Id { get; set; }
+        [Required]
+        [MaxLength(30)]
         public string Name { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Data;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
@@ -10,7 +9,9 @@ namespace TaskManagerAPI.Services
     {
         IEnumerable<CategoryDto> GetAll();
         CategoryDto GetById(int id);
-        int CreateCategory(CategoryDto dto);
+        int CreateCategory(CreateCategoryDto dto);
+        void UpdateCategory(CreateCategoryDto dto, int id);
+        void DeleteCategory(int id);
     }
 
     public class CategoryService : ICategoryService
@@ -49,7 +50,7 @@ namespace TaskManagerAPI.Services
             return result;
         }
 
-        public int CreateCategory(CategoryDto dto)
+        public int CreateCategory(CreateCategoryDto dto)
         {
             var category = _mapper.Map<Category>(dto);
 
@@ -58,10 +59,36 @@ namespace TaskManagerAPI.Services
             if (categoryAlreadyExists is not null)
                 throw new BadRequestException($"Category already exists.");
 
-            _context.Categories.Add(category);
+            _context.Add(category);
             _context.SaveChanges();
 
             return category.Id;
+        }
+
+        public void UpdateCategory(CreateCategoryDto dto, int id)
+        {
+            var category = _context
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+
+            if (category is null)
+                throw new NotFoundException("Category not found.");
+
+            category.Name = dto.Name;
+            _context.SaveChanges();
+        }
+
+        public void DeleteCategory(int id)
+        {
+            var category = _context
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+
+            if (category is null)
+                throw new NotFoundException("Category not found.");
+
+            _context.Remove(category);
+            _context.SaveChanges();
         }
     }
 }

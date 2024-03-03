@@ -17,7 +17,7 @@ namespace TaskManagerAPI
             // Category
             CreateMap<Category, CategoryDto>();
 
-            CreateMap<CategoryDto, Category>();
+            CreateMap<CreateCategoryDto, Category>();
         }
     }
 }
