@@ -19,11 +19,13 @@ namespace TaskManagerAPI.Services
     {
         private readonly TaskManagerDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<TaskService> _logger;
 
-        public TaskService(TaskManagerDbContext context, IMapper mapper)
+        public TaskService(TaskManagerDbContext context, IMapper mapper, ILogger<TaskService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public IEnumerable<TaskDto> GetAll()
@@ -81,6 +83,8 @@ namespace TaskManagerAPI.Services
 
         public void DeleteTask(int id)
         {
+            _logger.LogError($"Task with id: {id} DELETE action called");
+
             var task = _context
                 .Tasks
                 .FirstOrDefault(t => t.Id == id);

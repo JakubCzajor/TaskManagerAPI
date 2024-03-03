@@ -18,11 +18,13 @@ namespace TaskManagerAPI.Services
     {
         private readonly TaskManagerDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(TaskManagerDbContext context, IMapper mapper)
+        public CategoryService(TaskManagerDbContext context, IMapper mapper, ILogger<CategoryService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public IEnumerable<CategoryDto> GetAll()
@@ -80,6 +82,8 @@ namespace TaskManagerAPI.Services
 
         public void DeleteCategory(int id)
         {
+            _logger.LogError($"Category with id: {id} DELETE action called");
+
             var category = _context
                 .Categories
                 .FirstOrDefault(c => c.Id == id);
