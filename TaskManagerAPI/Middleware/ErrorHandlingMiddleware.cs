@@ -20,6 +20,11 @@ namespace TaskManagerAPI.Middleware
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync(badRequestException.Message);
             }
+            catch (ConflictException conflictException)
+            {
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
+                await context.Response.WriteAsync(conflictException.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;

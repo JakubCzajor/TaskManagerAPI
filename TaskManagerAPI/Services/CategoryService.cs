@@ -87,6 +87,11 @@ namespace TaskManagerAPI.Services
             if (category is null)
                 throw new NotFoundException("Category not found.");
 
+            var tasksCount = _context.Tasks.Count(t => t.CategoryId == id);
+
+            if (tasksCount > 0)
+                throw new ConflictException("Cannot delete category because it has associated tasks.");
+
             _context.Remove(category);
             _context.SaveChanges();
         }
