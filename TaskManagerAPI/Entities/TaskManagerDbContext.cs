@@ -33,7 +33,8 @@ namespace TaskManagerAPI.Entities
             modelBuilder.Entity<Task>()
                 .HasOne(t => t.Category)
                 .WithMany(c => c.Tasks)
-                .HasForeignKey(t => t.CategoryId);
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             modelBuilder.Entity<Category>()
