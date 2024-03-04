@@ -9,6 +9,7 @@ namespace TaskManagerAPI.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Task
             modelBuilder.Entity<Task>()
                 .Property(t => t.Name)
                 .IsRequired()
@@ -37,6 +38,7 @@ namespace TaskManagerAPI.Entities
                 .OnDelete(DeleteBehavior.Restrict);
 
 
+            // Category
             modelBuilder.Entity<Category>()
                 .Property(c => c.Name)
                 .IsRequired();
@@ -44,6 +46,16 @@ namespace TaskManagerAPI.Entities
             modelBuilder.Entity<Category>()
                 .HasIndex(c => c.Name)
                 .IsUnique();
+
+            // User
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email)
+                .IsRequired();
+
+            // Role
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
+                .IsRequired();
         }
 
         public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
