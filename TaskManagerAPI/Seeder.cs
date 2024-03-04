@@ -15,9 +15,16 @@ namespace TaskManagerAPI
         {
             if (_context.Database.CanConnect())
             {
-                var categories = GetCategories();
+                if (!_context.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _context.Roles.AddRange(roles);
+                    _context.SaveChanges();
+                }
+
                 if (!_context.Categories.Any())
                 {
+                    var categories = GetCategories();
                     _context.Categories.AddRange(categories);
                     _context.SaveChanges();
                 }
@@ -47,6 +54,27 @@ namespace TaskManagerAPI
             };
 
             return categories;
+        }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+                new Role()
+                {
+                    Name = "Manager"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                }
+            };
+
+            return roles;
         }
     }
 }
