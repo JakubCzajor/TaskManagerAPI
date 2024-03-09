@@ -2,22 +2,21 @@
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Entities;
 
-namespace TaskManagerAPI
+namespace TaskManagerAPI;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            // Task
-            CreateMap<Entities.Task, TaskDto>()
-                .ForMember(t => t.Category, c => c.MapFrom(s => s.Category.Name));
+        // Task
+        CreateMap<Entities.Task, TaskDto>()
+            .ForMember(t => t.Category, c => c.MapFrom(s => s.Category.Name));
 
-            CreateMap<CreateTaskDto, Entities.Task>();
+        CreateMap<CreateTaskDto, Entities.Task>();
 
-            // Category
-            CreateMap<Category, CategoryDto>();
+        // Category
+        CreateMap<Category, CategoryDto>();
 
-            CreateMap<CreateCategoryDto, Category>();
-        }
+        CreateMap<CreateCategoryDto, Category>();
     }
 }

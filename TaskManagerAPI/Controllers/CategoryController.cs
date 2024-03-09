@@ -2,57 +2,56 @@
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 
-namespace TaskManagerAPI.Controllers
+namespace TaskManagerAPI.Controllers;
+
+[Route("api/category")]
+[ApiController]
+public class CategoryController : ControllerBase
 {
-    [Route("api/category")]
-    [ApiController]
-    public class CategoryController : ControllerBase
+    private readonly ICategoryService _categoryService;
+
+    public CategoryController(ICategoryService categoryService)
     {
-        private readonly ICategoryService _categoryService;
+        _categoryService = categoryService;
+    }
 
-        public CategoryController(ICategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
+    [HttpGet]
+    public ActionResult<IEnumerable<CategoryDto>> GetAll()
+    {
+        var categoryDtos = _categoryService.GetAll();
 
-        [HttpGet]
-        public ActionResult<IEnumerable<CategoryDto>> GetAll()
-        {
-            var categoryDtos = _categoryService.GetAll();
+        return Ok(categoryDtos);
+    }
 
-            return Ok(categoryDtos);
-        }
+    [HttpGet("{id}")]
+    public ActionResult<CategoryDto> GetById(int id)
+    {
+        var categoryDto = _categoryService.GetById(id);
 
-        [HttpGet("{id}")]
-        public ActionResult<CategoryDto> GetById(int id)
-        {
-            var categoryDto = _categoryService.GetById(id);
+        return Ok(categoryDto);
+    }
 
-            return Ok(categoryDto);
-        }
+    [HttpPost]
+    public ActionResult CreateCategory([FromBody] CreateCategoryDto dto)
+    {
+        var id = _categoryService.CreateCategory(dto);
 
-        [HttpPost]
-        public ActionResult CreateCategory([FromBody] CreateCategoryDto dto)
-        {
-            var id = _categoryService.CreateCategory(dto);
+        return Created($"/api/task/{id}", null);
+    }
 
-            return Created($"/api/task/{id}", null);
-        }
+    [HttpPut("{id}")]
+    public ActionResult UpdateCategory([FromBody] CreateCategoryDto dto, int id)
+    {
+        _categoryService.UpdateCategory(dto, id);
 
-        [HttpPut("{id}")]
-        public ActionResult UpdateCategory([FromBody] CreateCategoryDto dto, int id)
-        {
-            _categoryService.UpdateCategory(dto, id);
+        return Ok();
+    }
 
-            return Ok();
-        }
+    [HttpDelete("{id}")]
+    public ActionResult DeleteCategory([FromRoute] int id)
+    {
+        _categoryService.DeleteCategory(id);
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteCategory([FromRoute] int id)
-        {
-            _categoryService.DeleteCategory(id);
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

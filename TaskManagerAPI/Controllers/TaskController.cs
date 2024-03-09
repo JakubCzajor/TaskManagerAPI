@@ -2,57 +2,56 @@
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 
-namespace TaskManagerAPI.Controllers
+namespace TaskManagerAPI.Controllers;
+
+[Route("api/task")]
+[ApiController]
+public class TaskController : ControllerBase
 {
-    [Route("api/task")]
-    [ApiController]
-    public class TaskController : ControllerBase
+    private readonly ITaskService _taskService;
+
+    public TaskController(ITaskService taskService)
     {
-        private readonly ITaskService _taskService;
+        _taskService = taskService;
+    }
 
-        public TaskController(ITaskService taskService)
-        {
-            _taskService = taskService;
-        }
+    [HttpGet]
+    public ActionResult<IEnumerable<TaskDto>> GetAll()
+    {
+        var tasksDtos = _taskService.GetAll();
 
-        [HttpGet]
-        public ActionResult<IEnumerable<TaskDto>> GetAll()
-        {
-            var tasksDtos = _taskService.GetAll();
+        return Ok(tasksDtos);
+    }
 
-            return Ok(tasksDtos);
-        }
+    [HttpGet("{id}")]
+    public ActionResult<TaskDto> GetById([FromRoute] int id)
+    {
+        var taskDto = _taskService.GetById(id);
 
-        [HttpGet("{id}")]
-        public ActionResult<TaskDto> GetById([FromRoute] int id)
-        {
-            var taskDto = _taskService.GetById(id);
+        return Ok(taskDto);
+    }
 
-            return Ok(taskDto);
-        }
+    [HttpPost]
+    public ActionResult CreateTask([FromBody] CreateTaskDto dto)
+    {
+        var id = _taskService.CreateTask(dto);
 
-        [HttpPost]
-        public ActionResult CreateTask([FromBody] CreateTaskDto dto)
-        {
-            var id = _taskService.CreateTask(dto);
+        return Created($"/api/task/{id}", null);
+    }
 
-            return Created($"/api/task/{id}", null);
-        }
+    [HttpPut("{id}")]
+    public ActionResult UpdateTask([FromBody] UpdateTaskDto dto, [FromRoute] int id)
+    {
+        _taskService.UpdateTask(dto, id);
 
-        [HttpPut("{id}")]
-        public ActionResult UpdateTask([FromBody] UpdateTaskDto dto, [FromRoute] int id)
-        {
-            _taskService.UpdateTask(dto, id);
+        return Ok();
+    }
 
-            return Ok();
-        }
+    [HttpDelete("{id}")]
+    public ActionResult DeleteTask([FromRoute] int id)
+    {
+        _taskService.DeleteTask(id);
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteTask([FromRoute] int id)
-        {
-            _taskService.DeleteTask(id);
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

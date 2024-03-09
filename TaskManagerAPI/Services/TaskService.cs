@@ -4,106 +4,105 @@ using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerAPI.Services;
+
+public interface ITaskService
 {
-    public interface ITaskService
+    IEnumerable<TaskDto> GetAll();
+    TaskDto GetById(int id);
+    int CreateTask(CreateTaskDto dto);
+    void UpdateTask(UpdateTaskDto dto, int id);
+    void DeleteTask(int id);
+}
+
+public class TaskService : ITaskService
+{
+    private readonly TaskManagerDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ILogger<TaskService> _logger;
+
+    public TaskService(TaskManagerDbContext context, IMapper mapper, ILogger<TaskService> logger)
     {
-        IEnumerable<TaskDto> GetAll();
-        TaskDto GetById(int id);
-        int CreateTask(CreateTaskDto dto);
-        void UpdateTask(UpdateTaskDto dto, int id);
-        void DeleteTask(int id);
+        _context = context;
+        _mapper = mapper;
+        _logger = logger;
     }
 
-    public class TaskService : ITaskService
+    public IEnumerable<TaskDto> GetAll()
     {
-        private readonly TaskManagerDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<TaskService> _logger;
+        var tasks = _context
+            .Tasks
+            .Include(t => t.Category)
+            .ToList();
 
-        public TaskService(TaskManagerDbContext context, IMapper mapper, ILogger<TaskService> logger)
-        {
-            _context = context;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        var tasksDtos = _mapper.Map<List<TaskDto>>(tasks);
 
-        public IEnumerable<TaskDto> GetAll()
-        {
-            var tasks = _context
-                .Tasks
-                .Include(t => t.Category)
-                .ToList();
+        return tasksDtos;
+    }
 
-            var tasksDtos = _mapper.Map<List<TaskDto>>(tasks);
+    public TaskDto GetById(int id)
+    {
+        var task = _context
+            .Tasks
+            .Include(t => t.Category)
+            .FirstOrDefault(t => t.Id == id);
 
-            return tasksDtos;
-        }
+        if (task is null)
+            throw new NotFoundException("Task not found.");
 
-        public TaskDto GetById(int id)
-        {
-            var task = _context
-                .Tasks
-                .Include(t => t.Category)
-                .FirstOrDefault(t => t.Id == id);
+        var result = _mapper.Map<TaskDto>(task);
 
-            if (task is null)
-                throw new NotFoundException("Task not found.");
+        return result;
+    }
 
-            var result = _mapper.Map<TaskDto>(task);
+    public int CreateTask(CreateTaskDto dto)
+    {
+        findCategoryById(dto.CategoryId);
+        var task = _mapper.Map<Entities.Task>(dto);
+        _context.Add(task);
+        _context.SaveChanges();
 
-            return result;
-        }
+        return task.Id;
+    }
 
-        public int CreateTask(CreateTaskDto dto)
-        {
-            findCategoryById(dto.CategoryId);
-            var task = _mapper.Map<Entities.Task>(dto);
-            _context.Add(task);
-            _context.SaveChanges();
+    public void UpdateTask(UpdateTaskDto dto, int id)
+    {
+        var task = _context
+            .Tasks
+            .FirstOrDefault(t => t.Id == id);
 
-            return task.Id;
-        }
+        if (task is null)
+            throw new NotFoundException("Task not found.");
 
-        public void UpdateTask(UpdateTaskDto dto, int id)
-        {
-            var task = _context
-                .Tasks
-                .FirstOrDefault(t => t.Id == id);
+        task.Name = dto.Name;
+        task.Description = dto.Description;
+        task.LastModifiedDate = DateTime.Now;
 
-            if (task is null)
-                throw new NotFoundException("Task not found.");
+        _context.SaveChanges();
+    }
 
-            task.Name = dto.Name;
-            task.Description = dto.Description;
-            task.LastModifiedDate = DateTime.Now;
+    public void DeleteTask(int id)
+    {
+        _logger.LogError($"Task with id: {id} DELETE action called");
 
-            _context.SaveChanges();
-        }
+        var task = _context
+            .Tasks
+            .FirstOrDefault(t => t.Id == id);
 
-        public void DeleteTask(int id)
-        {
-            _logger.LogError($"Task with id: {id} DELETE action called");
+        if (task is null)
+            throw new NotFoundException("Task not found.");
 
-            var task = _context
-                .Tasks
-                .FirstOrDefault(t => t.Id == id);
+        _context.Remove(task);
+        _context.SaveChanges();
+    }
 
-            if (task is null)
-                throw new NotFoundException("Task not found.");
+    private void findCategoryById(int categoryId)
+    {
+        var category = _context
+            .Categories
+            .FirstOrDefault(c => c.Id == categoryId);
 
-            _context.Remove(task);
-            _context.SaveChanges();
-        }
-
-        private void findCategoryById(int categoryId)
-        {
-            var category = _context
-                .Categories
-                .FirstOrDefault(c => c.Id == categoryId);
-
-            if (category is null)
-                throw new NotFoundException("Category not found.");
-        }
+        if (category is null)
+            throw new NotFoundException("Category not found.");
     }
 }

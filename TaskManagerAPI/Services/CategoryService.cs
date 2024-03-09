@@ -3,101 +3,100 @@ using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerAPI.Services;
+
+public interface ICategoryService
 {
-    public interface ICategoryService
+    IEnumerable<CategoryDto> GetAll();
+    CategoryDto GetById(int id);
+    int CreateCategory(CreateCategoryDto dto);
+    void UpdateCategory(CreateCategoryDto dto, int id);
+    void DeleteCategory(int id);
+}
+
+public class CategoryService : ICategoryService
+{
+    private readonly TaskManagerDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ILogger<CategoryService> _logger;
+
+    public CategoryService(TaskManagerDbContext context, IMapper mapper, ILogger<CategoryService> logger)
     {
-        IEnumerable<CategoryDto> GetAll();
-        CategoryDto GetById(int id);
-        int CreateCategory(CreateCategoryDto dto);
-        void UpdateCategory(CreateCategoryDto dto, int id);
-        void DeleteCategory(int id);
+        _context = context;
+        _mapper = mapper;
+        _logger = logger;
     }
 
-    public class CategoryService : ICategoryService
+    public IEnumerable<CategoryDto> GetAll()
     {
-        private readonly TaskManagerDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<CategoryService> _logger;
+        var categories = _context
+            .Categories
+            .ToList();
 
-        public CategoryService(TaskManagerDbContext context, IMapper mapper, ILogger<CategoryService> logger)
-        {
-            _context = context;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
 
-        public IEnumerable<CategoryDto> GetAll()
-        {
-            var categories = _context
-                .Categories
-                .ToList();
+        return categoriesDtos;
+    }
 
-            var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
+    public CategoryDto GetById(int id)
+    {
+        var category = _context
+            .Categories
+            .FirstOrDefault(c => c.Id == id);
 
-            return categoriesDtos;
-        }
+        if (category is null)
+            throw new NotFoundException("Category not found.");
 
-        public CategoryDto GetById(int id)
-        {
-            var category = _context
-                .Categories
-                .FirstOrDefault(c => c.Id == id);
+        var result = _mapper.Map<CategoryDto>(category);
 
-            if (category is null)
-                throw new NotFoundException("Category not found.");
+        return result;
+    }
 
-            var result = _mapper.Map<CategoryDto>(category);
+    public int CreateCategory(CreateCategoryDto dto)
+    {
+        var category = _mapper.Map<Category>(dto);
 
-            return result;
-        }
+        var categoryAlreadyExists = _context.Categories.FirstOrDefault(c => c.Name == category.Name);
 
-        public int CreateCategory(CreateCategoryDto dto)
-        {
-            var category = _mapper.Map<Category>(dto);
+        if (categoryAlreadyExists is not null)
+            throw new BadRequestException($"Category already exists.");
 
-            var categoryAlreadyExists = _context.Categories.FirstOrDefault(c => c.Name == category.Name);
+        _context.Add(category);
+        _context.SaveChanges();
 
-            if (categoryAlreadyExists is not null)
-                throw new BadRequestException($"Category already exists.");
+        return category.Id;
+    }
 
-            _context.Add(category);
-            _context.SaveChanges();
+    public void UpdateCategory(CreateCategoryDto dto, int id)
+    {
+        var category = _context
+            .Categories
+            .FirstOrDefault(c => c.Id == id);
 
-            return category.Id;
-        }
+        if (category is null)
+            throw new NotFoundException("Category not found.");
 
-        public void UpdateCategory(CreateCategoryDto dto, int id)
-        {
-            var category = _context
-                .Categories
-                .FirstOrDefault(c => c.Id == id);
+        category.Name = dto.Name;
+        _context.SaveChanges();
+    }
 
-            if (category is null)
-                throw new NotFoundException("Category not found.");
+    public void DeleteCategory(int id)
+    {
+        _logger.LogError($"Category with id: {id} DELETE action called");
 
-            category.Name = dto.Name;
-            _context.SaveChanges();
-        }
+        var category = _context
+            .Categories
+            .FirstOrDefault(c => c.Id == id);
 
-        public void DeleteCategory(int id)
-        {
-            _logger.LogError($"Category with id: {id} DELETE action called");
+        if (category is null)
+            throw new NotFoundException("Category not found.");
 
-            var category = _context
-                .Categories
-                .FirstOrDefault(c => c.Id == id);
+        var tasksCount = _context.Tasks.Count(t => t.CategoryId == id);
 
-            if (category is null)
-                throw new NotFoundException("Category not found.");
+        if (tasksCount > 0)
+            throw new ConflictException("Cannot delete category because it has associated tasks.");
 
-            var tasksCount = _context.Tasks.Count(t => t.CategoryId == id);
-
-            if (tasksCount > 0)
-                throw new ConflictException("Cannot delete category because it has associated tasks.");
-
-            _context.Remove(category);
-            _context.SaveChanges();
-        }
+        _context.Remove(category);
+        _context.SaveChanges();
     }
 }

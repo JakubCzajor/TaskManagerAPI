@@ -1,15 +1,14 @@
 ﻿using TaskManagerAPI.Entities;
 
-namespace TaskManagerAPI.Models
-{
-    public class TaskDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime LastModifiedDate { get; set; }
+namespace TaskManagerAPI.Models;
 
-        public string Category { get; set; }
-    }
+public class TaskDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime LastModifiedDate { get; set; }
+
+    public string Category { get; set; }
 }

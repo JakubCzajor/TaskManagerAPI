@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerAPI.Models
+namespace TaskManagerAPI.Models;
+
+public class CreateCategoryDto
 {
-    public class CreateCategoryDto
-    {
-        [Required]
-        [MaxLength(30)]
-        public string Name { get; set; }
-    }
+    [Required]
+    [MaxLength(30)]
+    public string Name { get; set; }
 }

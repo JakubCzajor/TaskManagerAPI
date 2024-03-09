@@ -1,80 +1,79 @@
 ﻿using TaskManagerAPI.Entities;
 
-namespace TaskManagerAPI
+namespace TaskManagerAPI;
+
+public class Seeder
 {
-    public class Seeder
+    private readonly TaskManagerDbContext _context;
+
+    public Seeder(TaskManagerDbContext context)
     {
-        private readonly TaskManagerDbContext _context;
+        _context = context;
+    }
 
-        public Seeder(TaskManagerDbContext context)
+    public void Seed()
+    {
+        if (_context.Database.CanConnect())
         {
-            _context = context;
-        }
-
-        public void Seed()
-        {
-            if (_context.Database.CanConnect())
+            if (!_context.Roles.Any())
             {
-                if (!_context.Roles.Any())
-                {
-                    var roles = GetRoles();
-                    _context.Roles.AddRange(roles);
-                    _context.SaveChanges();
-                }
+                var roles = GetRoles();
+                _context.Roles.AddRange(roles);
+                _context.SaveChanges();
+            }
 
-                if (!_context.Categories.Any())
-                {
-                    var categories = GetCategories();
-                    _context.Categories.AddRange(categories);
-                    _context.SaveChanges();
-                }
+            if (!_context.Categories.Any())
+            {
+                var categories = GetCategories();
+                _context.Categories.AddRange(categories);
+                _context.SaveChanges();
             }
         }
+    }
 
-        private IEnumerable<Category> GetCategories()
+    private IEnumerable<Category> GetCategories()
+    {
+        var categories = new List<Category>()
         {
-            var categories = new List<Category>()
+            new Category()
             {
-                new Category()
-                {
-                    Name = "Software Development"
-                },
-                new Category()
-                {
-                    Name = "Network Administration"
-                },
-                new Category()
-                {
-                    Name = "Quality Assurance"
-                },
-                new Category()
-                {
-                    Name = "Project Management"
-                }
-            };
+                Name = "Software Development"
+            },
+            new Category()
+            {
+                Name = "Network Administration"
+            },
+            new Category()
+            {
+                Name = "Quality Assurance"
+            },
+            new Category()
+            {
+                Name = "Project Management"
+            }
+        };
 
-            return categories;
-        }
+        return categories;
+    }
 
-        private IEnumerable<Role> GetRoles()
+    private IEnumerable<Role> GetRoles()
+    {
+        var roles = new List<Role>()
         {
-            var roles = new List<Role>()
+            new Role()
             {
-                new Role()
-                {
-                    Name = "User"
-                },
-                new Role()
-                {
-                    Name = "Manager"
-                },
-                new Role()
-                {
-                    Name = "Admin"
-                }
-            };
+                Name = "User"
+            },
+            new Role()
+            {
+                Name = "Manager"
+            },
+            new Role()
+            {
+                Name = "Admin"
+            }
+        };
 
-            return roles;
-        }
+        return roles;
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace TaskManagerAPI.Exceptions
-{
-    public class ConflictException : Exception
-    {
-        public ConflictException(string message) : base(message)
-        {
+﻿namespace TaskManagerAPI.Exceptions;
 
-        }
+public class ConflictException : Exception
+{
+    public ConflictException(string message) : base(message)
+    {
+
     }
 }

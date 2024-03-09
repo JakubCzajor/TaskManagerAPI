@@ -1,10 +1,9 @@
-﻿namespace TaskManagerAPI.Entities
-{
-    public class Category
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+﻿namespace TaskManagerAPI.Entities;
 
-        public virtual ICollection<Task> Tasks { get; set; }
-    }
+public class Category
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public virtual ICollection<Task> Tasks { get; set; }
 }
