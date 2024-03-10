@@ -46,7 +46,7 @@ public class TaskService : ITaskService
     public async Task<int> CreateTask(CreateTaskDto dto)
     {
         await findCategoryById(dto.CategoryId);
-        var task = _mapper.Map<Entities.CustomTask>(dto);
+        var task = _mapper.Map<CustomTask>(dto);
         _context.Add(task);
         await _context.SaveChangesAsync();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Models;
+using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Services;
 
@@ -17,7 +18,7 @@ public class AccountService : IAccountService
         _authenticationSettings = authenticationSettings;
     }
 
-    public void RegisterUser(RegisterUserDto dto)
+    public async Task RegisterUser(RegisterUserDto dto)
     {
         var newUser = new User()
         {
@@ -28,6 +29,6 @@ public class AccountService : IAccountService
         newUser.PasswordHash = hashedPassword;
 
         _context.Users.Add(newUser);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

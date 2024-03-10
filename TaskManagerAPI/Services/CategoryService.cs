@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
@@ -19,76 +20,72 @@ public class CategoryService : ICategoryService
         _logger = logger;
     }
 
-    public IEnumerable<CategoryDto> GetAll()
+    public async Task<IEnumerable<CategoryDto>> GetAll()
     {
-        var categories = _context
+        var categories = await _context
             .Categories
-            .ToList();
+            .ToListAsync();
 
-        var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
-
-        return categoriesDtos;
+        return _mapper.Map<List<CategoryDto>>(categories);
     }
 
-    public CategoryDto GetById(int id)
+    public async Task<CategoryDto> GetById(int id)
     {
-        var category = _context
+        var category = await _context
             .Categories
-            .FirstOrDefault(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null)
             throw new NotFoundException("Category not found.");
 
-        var result = _mapper.Map<CategoryDto>(category);
-
-        return result;
+        return _mapper.Map<CategoryDto>(category);
     }
 
-    public int CreateCategory(CreateCategoryDto dto)
+    public async Task<int> CreateCategory(CreateCategoryDto dto)
     {
         var category = _mapper.Map<Category>(dto);
 
-        var categoryAlreadyExists = _context.Categories.FirstOrDefault(c => c.Name == category.Name);
+        var categoryAlreadyExists = await _context.Categories.FirstOrDefaultAsync(c => c.Name == category.Name);
 
         if (categoryAlreadyExists is not null)
             throw new BadRequestException($"Category already exists.");
 
         _context.Add(category);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return category.Id;
     }
 
-    public void UpdateCategory(CreateCategoryDto dto, int id)
+    public async Task UpdateCategory(CreateCategoryDto dto, int id)
     {
-        var category = _context
+        var category = await _context
             .Categories
-            .FirstOrDefault(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null)
             throw new NotFoundException("Category not found.");
 
         category.Name = dto.Name;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void DeleteCategory(int id)
+    public async Task DeleteCategory(int id)
     {
         _logger.LogError($"Category with id: {id} DELETE action called");
 
-        var category = _context
+        var category = await _context
             .Categories
-            .FirstOrDefault(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null)
             throw new NotFoundException("Category not found.");
 
-        var tasksCount = _context.Tasks.Count(t => t.CategoryId == id);
+        var tasksCount = await _context.Tasks.CountAsync(t => t.CategoryId == id);
 
         if (tasksCount > 0)
             throw new ConflictException("Cannot delete category because it has associated tasks.");
 
         _context.Remove(category);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

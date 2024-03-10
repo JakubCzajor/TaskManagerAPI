@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
+using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Controllers;
 
@@ -16,9 +17,9 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    public ActionResult RegisterUser([FromBody] RegisterUserDto dto)
+    public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto dto)
     {
-        _accountService.RegisterUser(dto);
+        await _accountService.RegisterUser(dto);
 
         return Ok();
     }

@@ -4,9 +4,9 @@ namespace TaskManagerAPI.Services.Interfaces;
 
 public interface ICategoryService
 {
-    IEnumerable<CategoryDto> GetAll();
-    CategoryDto GetById(int id);
-    int CreateCategory(CreateCategoryDto dto);
-    void UpdateCategory(CreateCategoryDto dto, int id);
-    void DeleteCategory(int id);
+    Task<IEnumerable<CategoryDto>> GetAll();
+    Task<CategoryDto> GetById(int id);
+    Task<int> CreateCategory(CreateCategoryDto dto);
+    Task UpdateCategory(CreateCategoryDto dto, int id);
+    Task DeleteCategory(int id);
 }

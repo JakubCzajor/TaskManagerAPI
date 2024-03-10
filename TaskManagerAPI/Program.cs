@@ -11,6 +11,7 @@ using TaskManagerAPI;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Middleware;
 using TaskManagerAPI.Services;
+using TaskManagerAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
