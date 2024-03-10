@@ -2,17 +2,9 @@
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
+using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Services;
-
-public interface ICategoryService
-{
-    IEnumerable<CategoryDto> GetAll();
-    CategoryDto GetById(int id);
-    int CreateCategory(CreateCategoryDto dto);
-    void UpdateCategory(CreateCategoryDto dto, int id);
-    void DeleteCategory(int id);
-}
 
 public class CategoryService : ICategoryService
 {

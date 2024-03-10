@@ -4,11 +4,6 @@ using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Services;
 
-public interface IAccountService
-{
-    void RegisterUser(RegisterUserDto dto);
-}
-
 public class AccountService : IAccountService
 {
     private readonly TaskManagerDbContext _context;
