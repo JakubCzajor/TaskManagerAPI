@@ -8,11 +8,11 @@ namespace TaskManagerAPI.Services;
 
 public interface ITaskService
 {
-    IEnumerable<TaskDto> GetAll();
-    TaskDto GetById(int id);
-    int CreateTask(CreateTaskDto dto);
-    void UpdateTask(UpdateTaskDto dto, int id);
-    void DeleteTask(int id);
+    Task<IEnumerable<TaskDto>> GetAll();
+    Task<TaskDto> GetById(int id);
+    Task<int> CreateTask(CreateTaskDto dto);
+    Task UpdateTask(UpdateTaskDto dto, int id);
+    Task DeleteTask(int id);
 }
 
 public class TaskService : ITaskService
@@ -28,48 +28,44 @@ public class TaskService : ITaskService
         _logger = logger;
     }
 
-    public IEnumerable<TaskDto> GetAll()
+    public async Task<IEnumerable<TaskDto>> GetAll()
     {
-        var tasks = _context
+        var tasks = await _context
             .Tasks
             .Include(t => t.Category)
-            .ToList();
+            .ToListAsync();
 
-        var tasksDtos = _mapper.Map<List<TaskDto>>(tasks);
-
-        return tasksDtos;
+        return _mapper.Map<List<TaskDto>>(tasks);
     }
 
-    public TaskDto GetById(int id)
+    public async Task<TaskDto> GetById(int id)
     {
-        var task = _context
+        var task = await _context
             .Tasks
             .Include(t => t.Category)
-            .FirstOrDefault(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (task is null)
             throw new NotFoundException("Task not found.");
 
-        var result = _mapper.Map<TaskDto>(task);
-
-        return result;
+        return _mapper.Map<TaskDto>(task);
     }
 
-    public int CreateTask(CreateTaskDto dto)
+    public async Task<int> CreateTask(CreateTaskDto dto)
     {
-        findCategoryById(dto.CategoryId);
-        var task = _mapper.Map<Entities.Task>(dto);
+        await findCategoryById(dto.CategoryId);
+        var task = _mapper.Map<Entities.CustomTask>(dto);
         _context.Add(task);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return task.Id;
     }
 
-    public void UpdateTask(UpdateTaskDto dto, int id)
+    public async Task UpdateTask(UpdateTaskDto dto, int id)
     {
-        var task = _context
+        var task = await _context
             .Tasks
-            .FirstOrDefault(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (task is null)
             throw new NotFoundException("Task not found.");
@@ -78,29 +74,29 @@ public class TaskService : ITaskService
         task.Description = dto.Description;
         task.LastModifiedDate = DateTime.Now;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void DeleteTask(int id)
+    public async Task DeleteTask(int id)
     {
         _logger.LogError($"Task with id: {id} DELETE action called");
 
-        var task = _context
+        var task = await _context
             .Tasks
-            .FirstOrDefault(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (task is null)
             throw new NotFoundException("Task not found.");
 
         _context.Remove(task);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    private void findCategoryById(int categoryId)
+    private async Task findCategoryById(int categoryId)
     {
-        var category = _context
+        var category = await _context
             .Categories
-            .FirstOrDefault(c => c.Id == categoryId);
+            .FirstOrDefaultAsync(c => c.Id == categoryId);
 
         if (category is null)
             throw new NotFoundException("Category not found.");

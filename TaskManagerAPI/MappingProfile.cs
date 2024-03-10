@@ -9,10 +9,10 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         // Task
-        CreateMap<Entities.Task, TaskDto>()
+        CreateMap<CustomTask, TaskDto>()
             .ForMember(t => t.Category, c => c.MapFrom(s => s.Category.Name));
 
-        CreateMap<CreateTaskDto, Entities.Task>();
+        CreateMap<CreateTaskDto, CustomTask>();
 
         // Category
         CreateMap<Category, CategoryDto>();

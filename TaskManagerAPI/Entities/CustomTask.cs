@@ -2,7 +2,7 @@
 
 namespace TaskManagerAPI.Entities;
 
-public class Task
+public class CustomTask
 {
     public int Id { get; set; }
     public string Name { get; set; }

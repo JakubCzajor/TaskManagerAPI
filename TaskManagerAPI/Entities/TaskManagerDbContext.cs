@@ -4,7 +4,7 @@ namespace TaskManagerAPI.Entities;
 
 public class TaskManagerDbContext : DbContext
 {
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<CustomTask> Tasks { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
@@ -12,28 +12,28 @@ public class TaskManagerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Task
-        modelBuilder.Entity<Task>()
+        modelBuilder.Entity<CustomTask>()
             .Property(t => t.Name)
             .IsRequired()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Task>()
+        modelBuilder.Entity<CustomTask>()
             .Property(t => t.Description)
             .IsRequired()
             .HasMaxLength(1000);
 
-        modelBuilder.Entity<Task>()
+        modelBuilder.Entity<CustomTask>()
             .Property(t => t.CreatedDate)
             .HasColumnType("datetime")
             .HasDefaultValueSql("getdate()");
 
-        modelBuilder.Entity<Task>()
+        modelBuilder.Entity<CustomTask>()
             .Property(t => t.LastModifiedDate)
             .HasColumnType("datetime")
             .HasDefaultValueSql("getdate()");
 
 
-        modelBuilder.Entity<Task>()
+        modelBuilder.Entity<CustomTask>()
             .HasOne(t => t.Category)
             .WithMany(c => c.Tasks)
             .HasForeignKey(t => t.CategoryId)

@@ -16,41 +16,41 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<TaskDto>> GetAll()
+    public async Task<ActionResult<IEnumerable<TaskDto>>> GetAll()
     {
-        var tasksDtos = _taskService.GetAll();
+        var tasksDtos = await _taskService.GetAll();
 
         return Ok(tasksDtos);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TaskDto> GetById([FromRoute] int id)
+    public async Task<ActionResult<TaskDto>> GetById([FromRoute] int id)
     {
-        var taskDto = _taskService.GetById(id);
+        var taskDto = await _taskService.GetById(id);
 
         return Ok(taskDto);
     }
 
     [HttpPost]
-    public ActionResult CreateTask([FromBody] CreateTaskDto dto)
+    public async Task<ActionResult> CreateTask([FromBody] CreateTaskDto dto)
     {
-        var id = _taskService.CreateTask(dto);
+        var id = await _taskService.CreateTask(dto);
 
         return Created($"/api/task/{id}", null);
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateTask([FromBody] UpdateTaskDto dto, [FromRoute] int id)
+    public async Task<ActionResult> UpdateTask([FromBody] UpdateTaskDto dto, [FromRoute] int id)
     {
-        _taskService.UpdateTask(dto, id);
+        await _taskService.UpdateTask(dto, id);
 
         return Ok();
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteTask([FromRoute] int id)
+    public async Task <ActionResult> DeleteTask([FromRoute] int id)
     {
-        _taskService.DeleteTask(id);
+        await _taskService.DeleteTask(id);
 
         return NoContent();
     }
