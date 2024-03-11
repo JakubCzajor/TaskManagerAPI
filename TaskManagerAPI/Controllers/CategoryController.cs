@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
@@ -7,6 +8,7 @@ namespace TaskManagerAPI.Controllers;
 
 [Route("api/category")]
 [ApiController]
+[Authorize]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
@@ -33,6 +35,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> CreateCategory([FromBody] CreateCategoryDto dto)
     {
         var id = await _categoryService.CreateCategory(dto);

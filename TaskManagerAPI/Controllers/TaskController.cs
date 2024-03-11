@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
@@ -7,6 +8,7 @@ namespace TaskManagerAPI.Controllers;
 
 [Route("api/task")]
 [ApiController]
+[Authorize]
 public class TaskController : ControllerBase
 {
     private readonly ITaskService _taskService;
@@ -33,6 +35,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult> CreateTask([FromBody] CreateTaskDto dto)
     {
         var id = await _taskService.CreateTask(dto);
