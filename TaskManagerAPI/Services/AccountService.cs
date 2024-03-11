@@ -22,7 +22,8 @@ public class AccountService : IAccountService
     {
         var newUser = new User()
         {
-            Email = dto.Email
+            Email = dto.Email,
+            RoleId = dto.RoleId
         };
 
         var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);

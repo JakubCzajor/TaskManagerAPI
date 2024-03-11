@@ -4,12 +4,15 @@ using Microsoft.Extensions.Options;
 using NLog.Web;
 using System.Reflection;
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerAPI;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Middleware;
+using TaskManagerAPI.Models;
+using TaskManagerAPI.Models.Validators;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
 
@@ -63,6 +66,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ResponseTimeMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 var app = builder.Build();
 
