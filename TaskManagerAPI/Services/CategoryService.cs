@@ -50,7 +50,7 @@ public class CategoryService : ICategoryService
         if (categoryAlreadyExists is not null)
             throw new BadRequestException($"Category already exists.");
 
-        _context.Add(category);
+        _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
         return category.Id;
@@ -85,7 +85,7 @@ public class CategoryService : ICategoryService
         if (tasksCount > 0)
             throw new ConflictException("Cannot delete category because it has associated tasks.");
 
-        _context.Remove(category);
+        _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
     }
 }

@@ -6,9 +6,11 @@ using System.Reflection;
 using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerAPI;
+using TaskManagerAPI.Authorization;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Middleware;
 using TaskManagerAPI.Models;
@@ -68,6 +70,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ResponseTimeMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 
 var app = builder.Build();
 
