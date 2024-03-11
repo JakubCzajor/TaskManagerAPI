@@ -32,6 +32,10 @@ public class ErrorHandlingMiddleware : IMiddleware
             context.Response.StatusCode = StatusCodes.Status409Conflict;
             await context.Response.WriteAsync(conflictException.Message);
         }
+        catch (ForbidException forbidException)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        }
         catch (Exception e)
         {
             _logger.LogError(e, e.Message);
