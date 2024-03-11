@@ -5,4 +5,5 @@ namespace TaskManagerAPI.Services.Interfaces;
 public interface IAccountService
 {
     Task RegisterUser(RegisterUserDto dto);
+    Task<string> GenerateJwtToken(LoginUserDto dto);
 }
