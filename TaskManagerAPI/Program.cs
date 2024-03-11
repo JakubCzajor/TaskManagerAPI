@@ -62,6 +62,7 @@ builder.Services.AddScoped<Seeder>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService >();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ResponseTimeMiddleware>();
