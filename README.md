@@ -1,6 +1,6 @@
 # TaskManagerAPI
 
-TaskManagerAPI is a .NET 8 Web API project designed to manage tasks, categories and users. It provides RESTful endpoints for performing CRUD operations on these entities. Users can interact with the application via Swagger or Postman.
+TaskManagerAPI is a ASP.NET 8 Web API project designed to manage tasks, categories and users. It provides RESTful endpoints for performing CRUD operations on these entities. Users can interact with the application via Swagger or Postman.
 
 ## Features
 
