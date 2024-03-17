@@ -73,7 +73,7 @@ public class TaskService : ITaskService
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, task,
             new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
-        if (!authorizationResult.Succeeded)
+        if (!authorizationResult.Succeeded && !_userContextService.User.IsInRole("Admin"))
             throw new ForbidException();
 
         task.Name = dto.Name;
@@ -97,7 +97,7 @@ public class TaskService : ITaskService
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, task,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
 
-        if (!authorizationResult.Succeeded)
+        if (!authorizationResult.Succeeded && !_userContextService.User.IsInRole("Admin"))
             throw new ForbidException();
 
         _context.Tasks.Remove(task);
