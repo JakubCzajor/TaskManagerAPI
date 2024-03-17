@@ -53,6 +53,8 @@ The API exposes the following endpoints:
 
 - **Tasks**: 
   - `GET /api/task`: Get all tasks.
+  - `GET /api/task/active`: Get active tasks.
+  - `GET /api/task/done`: Get done tasks.
   - `GET /api/task/{id}`: Get a specific task by ID.
   - `POST /api/task`: Create a new task.
   - `PUT /api/task/{id}`: Update an existing task.
@@ -83,4 +85,4 @@ TaskManagerAPI utilizes JWT Bearer Token for authentication and authorization. T
 - **Manager**
   - Can view, create, update and delete tasks.
 - **User**: 
-  - Can view tasks.
+  - Can view active tasks and set them as done.
