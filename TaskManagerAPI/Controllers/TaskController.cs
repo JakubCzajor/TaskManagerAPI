@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagerAPI.Exceptions;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
@@ -19,9 +20,27 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<IEnumerable<TaskDto>>> GetAll()
     {
         var tasksDtos = await _taskService.GetAll();
+
+        return Ok(tasksDtos);
+    }
+
+    [HttpGet("done")]
+    [Authorize(Roles = "Admin,Manager")]
+    public async Task<ActionResult<IEnumerable<TaskDto>>> GetDoneTasks()
+    {
+        var tasksDtos = await _taskService.GetDoneTasks();
+
+        return Ok(tasksDtos);
+    }
+
+    [HttpGet("active")]
+    public async Task<ActionResult<IEnumerable<TaskDto>>> GetActiveTasks()
+    {
+        var tasksDtos = await _taskService.GetActiveTasks();
 
         return Ok(tasksDtos);
     }
@@ -57,5 +76,13 @@ public class TaskController : ControllerBase
         await _taskService.DeleteTask(id);
 
         return NoContent();
+    }
+
+    [HttpPut("{id}/done")]
+    public async Task<ActionResult> SetTaskAsDone([FromRoute] int id)
+    {
+        await _taskService.SetTaskAsDone(id);
+
+        return Ok();
     }
 }

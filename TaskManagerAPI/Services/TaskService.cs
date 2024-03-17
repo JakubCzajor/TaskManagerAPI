@@ -37,6 +37,28 @@ public class TaskService : ITaskService
         return _mapper.Map<List<TaskDto>>(tasks);
     }
 
+    public async Task<IEnumerable<TaskDto>> GetDoneTasks()
+    {
+        var tasks = await _context
+            .Tasks
+            .Include(t => t.Category)
+            .Where(t => t.IsDone == true)
+            .ToListAsync();
+
+        return _mapper.Map<List<TaskDto>>(tasks);
+    }
+
+    public async Task<IEnumerable<TaskDto>> GetActiveTasks()
+    {
+        var tasks = await _context
+            .Tasks
+            .Include(t => t.Category)
+            .Where(t => t.IsDone == false)
+            .ToListAsync();
+
+        return _mapper.Map<List<TaskDto>>(tasks);
+    }
+
     public async Task<TaskDto> GetById(int id)
     {
         var task = await _context
@@ -101,6 +123,21 @@ public class TaskService : ITaskService
             throw new ForbidException();
 
         _context.Tasks.Remove(task);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task SetTaskAsDone(int id)
+    {
+        var task = await _context
+            .Tasks
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (task is null)
+            throw new NotFoundException("Task not found.");
+
+        task.LastModifiedDate = DateTime.Now;
+        task.IsDone = true;
+
         await _context.SaveChangesAsync();
     }
 
