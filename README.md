@@ -84,5 +84,8 @@ TaskManagerAPI utilizes JWT Bearer Token for authentication and authorization. T
   - Full access to all endpoints.
 - **Manager**
   - Can view, create, update and delete tasks.
+  - Can view, create, update and delete categories.
+  - Can change user roles.
 - **User**: 
   - Can view active tasks and set them as done.
+  - Can view categories.
