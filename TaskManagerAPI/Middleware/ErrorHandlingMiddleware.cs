@@ -36,6 +36,11 @@ public class ErrorHandlingMiddleware : IMiddleware
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
         }
+        catch (UnauthorizedException unauthorizedException)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync(unauthorizedException.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, e.Message);

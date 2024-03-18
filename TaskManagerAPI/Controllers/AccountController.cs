@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
@@ -30,5 +31,14 @@ public class AccountController : ControllerBase
         string token = await _accountService.GenerateJwtToken(dto);
 
         return Ok(token);
+    }
+
+    [HttpPut("role/{userId}")]
+    [Authorize(Roles = "Admin,Manager")]
+    public async Task<ActionResult> ChangeUserRole([FromRoute] int userId, [FromBody] UpdateRoleDto dto)
+    {
+        await _accountService.UpdateUserRole(userId, dto);
+
+        return Ok();
     }
 }

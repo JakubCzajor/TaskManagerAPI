@@ -80,4 +80,34 @@ public class AccountService : IAccountService
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
     }
+
+    public async Task UpdateUserRole(int userId, UpdateRoleDto dto)
+    {
+        var user = await _context
+            .Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+            throw new NotFoundException("User not found.");
+
+        if (user.Id == userId)
+            throw new UnauthorizedException("Users are not authorized to change their own roles.");
+
+        var role = await _context
+            .Roles
+            .FirstOrDefaultAsync(r => r.Id == dto.RoleId);
+
+        if (role is null)
+            throw new NotFoundException("Role not found.");
+
+        if (user.Role.Name == "Manager" && role.Name == "Admin")
+            throw new UnauthorizedException("You are not authorized to change user roles to roles higher than Manager.");
+
+        if (user.Role.Name == "Manager" && role.Name == "User")
+            throw new UnauthorizedException("Managers are not authorized to change other Managers roles to User.");
+
+        user.RoleId = dto.RoleId;
+        await _context.SaveChangesAsync();
+    }
 }
