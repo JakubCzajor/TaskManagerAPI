@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,12 +17,15 @@ public class AccountService : IAccountService
     private readonly TaskManagerDbContext _context;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
+    private readonly IUserContextService _userContextService;
 
-    public AccountService(TaskManagerDbContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+    public AccountService(TaskManagerDbContext context, IPasswordHasher<User> passwordHasher,
+        AuthenticationSettings authenticationSettings, IUserContextService userContextService)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
+        _userContextService = userContextService;
     }
 
     public async Task RegisterUser(RegisterUserDto dto)
@@ -108,6 +112,27 @@ public class AccountService : IAccountService
             throw new UnauthorizedException("Managers are not authorized to change other Managers roles to User.");
 
         user.RoleId = dto.RoleId;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateUserPassword(UpdatePasswordDto dto)
+    {
+        var userId = int.Parse(_userContextService.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var user = await _context
+            .Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+            throw new NotFoundException("User not found.");
+
+        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.OldPassword);
+        if (result == PasswordVerificationResult.Failed)
+            throw new BadRequestException("Invalid password.");
+
+        var hashedPassword = _passwordHasher.HashPassword(user, dto.NewPassword);
+        user.PasswordHash = hashedPassword;
+
         await _context.SaveChangesAsync();
     }
 }
