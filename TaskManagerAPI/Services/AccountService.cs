@@ -20,15 +20,18 @@ public class AccountService : IAccountService
     private readonly AuthenticationSettings _authenticationSettings;
     private readonly IUserContextService _userContextService;
     private readonly IMapper _mapper;
+    private readonly ILogger<AccountService> _logger;
 
     public AccountService(TaskManagerDbContext context, IPasswordHasher<User> passwordHasher,
-        AuthenticationSettings authenticationSettings, IUserContextService userContextService, IMapper mapper)
+        AuthenticationSettings authenticationSettings, IUserContextService userContextService,
+        IMapper mapper, ILogger<AccountService> logger)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
         _userContextService = userContextService;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task RegisterUser(RegisterUserDto dto)
@@ -58,7 +61,10 @@ public class AccountService : IAccountService
 
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
         if (result == PasswordVerificationResult.Failed)
+        {
+            _logger.LogWarning($"User {dto.Email} failed authentication attempt.");
             throw new BadRequestException("Invalid username or password.");
+        }
 
         var claims = new List<Claim>()
         {
@@ -131,7 +137,10 @@ public class AccountService : IAccountService
 
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.OldPassword);
         if (result == PasswordVerificationResult.Failed)
+        {
+            _logger.LogWarning($"User {user.Email} failed password update attempt.");
             throw new BadRequestException("Invalid password.");
+        }
 
         var hashedPassword = _passwordHasher.HashPassword(user, dto.NewPassword);
         user.PasswordHash = hashedPassword;
