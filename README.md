@@ -8,6 +8,7 @@ TaskManagerAPI is a ASP.NET 8 Web API project designed to manage tasks, categori
   - .NET 8 Core
   - Entity Framework
   - SQL Server
+  - FluentValidation
   - AutoMapper
   - NLog
   - Swagger
@@ -67,9 +68,14 @@ The API exposes the following endpoints:
   - `PUT /api/category/{id}`: Update an existing category.
   - `DELETE /api/category/{id}`: Delete a category.
 
-- **Users**:
-  - `POST /api/users/register`: Register a new user.
-  - `POST /api/users/login`: Login to the application and obtain a JWT token.
+- **Accounts**:
+  - `POST /api/account/register`: Register a new user.
+  - `POST /api/account/login`: Login to the application and obtain a JWT token.
+  - `GET /api/account`: Get all users.
+  - `GET /api/account/profile`: Get user profile.
+  - `PUT /api/account/profile`: Update user profile.
+  - `PUT /api/account/password`: Update user password.
+  - `PUT /api/account/role/{userId}`: Update user role.
 
 ## Authentication/Authorization
 
@@ -89,3 +95,4 @@ TaskManagerAPI utilizes JWT Bearer Token for authentication and authorization. T
 - **User**: 
   - Can view active tasks and set them as done.
   - Can view categories.
+  - Can view, update personal information and password.
