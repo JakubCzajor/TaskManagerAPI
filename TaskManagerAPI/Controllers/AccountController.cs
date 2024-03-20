@@ -60,4 +60,13 @@ public class AccountController : ControllerBase
 
         return Ok(userDtos);
     }
+
+    [HttpGet("profile")]
+    [Authorize]
+    public async Task<ActionResult<UserProfileDto>> GetUserProfile()
+    {
+        var userDto = await _accountService.GetUserProfile();
+
+        return Ok(userDto);
+    }
 }

@@ -148,4 +148,19 @@ public class AccountService : IAccountService
 
         return _mapper.Map<List<UserDto>>(tasks);
     }
+
+    public async Task<UserProfileDto> GetUserProfile()
+    {
+        var userId = int.Parse(_userContextService.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var user = await _context
+            .Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+            throw new NotFoundException("User not found.");
+
+        return _mapper.Map<UserProfileDto>(user);
+    }
 }
