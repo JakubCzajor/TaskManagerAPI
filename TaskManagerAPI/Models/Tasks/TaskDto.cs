@@ -1,6 +1,6 @@
 ﻿using TaskManagerAPI.Entities;
 
-namespace TaskManagerAPI.Models;
+namespace TaskManagerAPI.Models.Tasks;
 
 public class TaskDto
 {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Authorization;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
-using TaskManagerAPI.Models;
+using TaskManagerAPI.Models.Tasks;
 using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Services;

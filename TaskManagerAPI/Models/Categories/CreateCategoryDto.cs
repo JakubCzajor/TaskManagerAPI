@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerAPI.Models;
+namespace TaskManagerAPI.Models.Categories;
 
 public class CreateCategoryDto
 {

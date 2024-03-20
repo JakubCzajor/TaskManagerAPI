@@ -13,10 +13,10 @@ using TaskManagerAPI;
 using TaskManagerAPI.Authorization;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Middleware;
-using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.Validators;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
+using TaskManagerAPI.Models.Accounts;
 
 var builder = WebApplication.CreateBuilder(args);
 

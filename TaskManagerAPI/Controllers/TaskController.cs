@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Exceptions;
-using TaskManagerAPI.Models;
+using TaskManagerAPI.Models.Tasks;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
-using TaskManagerAPI.Models;
+using TaskManagerAPI.Models.Accounts;
 using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Services;

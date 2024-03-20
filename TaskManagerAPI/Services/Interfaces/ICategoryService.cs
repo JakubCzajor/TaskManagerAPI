@@ -1,4 +1,4 @@
-﻿using TaskManagerAPI.Models;
+﻿using TaskManagerAPI.Models.Categories;
 
 namespace TaskManagerAPI.Services.Interfaces;
 

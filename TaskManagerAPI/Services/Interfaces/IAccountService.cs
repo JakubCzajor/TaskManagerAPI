@@ -1,4 +1,4 @@
-﻿using TaskManagerAPI.Models;
+﻿using TaskManagerAPI.Models.Accounts;
 
 namespace TaskManagerAPI.Services.Interfaces;
 

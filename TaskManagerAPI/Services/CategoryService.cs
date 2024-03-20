@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Entities;
 using TaskManagerAPI.Exceptions;
-using TaskManagerAPI.Models;
+using TaskManagerAPI.Models.Categories;
 using TaskManagerAPI.Services.Interfaces;
 
 namespace TaskManagerAPI.Services;

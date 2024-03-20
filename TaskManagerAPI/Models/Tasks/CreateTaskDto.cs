@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagerAPI.Entities;
 
-namespace TaskManagerAPI.Models;
+namespace TaskManagerAPI.Models.Tasks;
 
-public class UpdateTaskDto
+public class CreateTaskDto
 {
     [Required]
     [MaxLength(50)]
@@ -10,4 +11,6 @@ public class UpdateTaskDto
     [Required]
     [MaxLength(1000)]
     public string Description { get; set; }
+
+    public int CategoryId { get; set; }
 }

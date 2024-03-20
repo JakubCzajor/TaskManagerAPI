@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using TaskManagerAPI.Models;
 using TaskManagerAPI.Entities;
+using TaskManagerAPI.Models.Tasks;
+using TaskManagerAPI.Models.Categories;
+using TaskManagerAPI.Models.Accounts;
 
 namespace TaskManagerAPI;
 
