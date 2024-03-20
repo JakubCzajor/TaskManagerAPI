@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using AutoMapper;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
 using TaskManagerAPI.Services.Interfaces;
@@ -48,5 +50,14 @@ public class AccountController : ControllerBase
         await _accountService.UpdateUserPassword(dto);
 
         return Ok();
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin,Manager")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+    {
+        var userDtos = await _accountService.GetAll();
+
+        return Ok(userDtos);
     }
 }

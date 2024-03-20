@@ -8,4 +8,5 @@ public interface IAccountService
     Task<string> GenerateJwtToken(LoginUserDto dto);
     Task UpdateUserRole(int id, UpdateRoleDto dto);
     Task UpdateUserPassword(UpdatePasswordDto dto);
+    Task<IEnumerable<UserDto>> GetAll();
 }

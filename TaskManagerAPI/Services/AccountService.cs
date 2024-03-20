@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +19,16 @@ public class AccountService : IAccountService
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
     private readonly IUserContextService _userContextService;
+    private readonly IMapper _mapper;
 
     public AccountService(TaskManagerDbContext context, IPasswordHasher<User> passwordHasher,
-        AuthenticationSettings authenticationSettings, IUserContextService userContextService)
+        AuthenticationSettings authenticationSettings, IUserContextService userContextService, IMapper mapper)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
         _userContextService = userContextService;
+        _mapper = mapper;
     }
 
     public async Task RegisterUser(RegisterUserDto dto)
@@ -134,5 +137,15 @@ public class AccountService : IAccountService
         user.PasswordHash = hashedPassword;
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<UserDto>> GetAll()
+    {
+        var tasks = await _context
+            .Users
+            .Include(u => u.Role)
+            .ToListAsync();
+
+        return _mapper.Map<List<UserDto>>(tasks);
     }
 }

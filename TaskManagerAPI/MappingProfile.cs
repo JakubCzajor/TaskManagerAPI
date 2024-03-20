@@ -18,5 +18,9 @@ public class MappingProfile : Profile
         CreateMap<Category, CategoryDto>();
 
         CreateMap<CreateCategoryDto, Category>();
+
+        // User
+        CreateMap<User, UserDto>()
+            .ForMember(u => u.Role, r => r.MapFrom(s => s.Role.Name));
     }
 }
