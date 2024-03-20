@@ -10,4 +10,5 @@ public interface IAccountService
     Task UpdateUserPassword(UpdatePasswordDto dto);
     Task<IEnumerable<UserDto>> GetAll();
     Task<UserProfileDto> GetUserProfile();
+    Task UpdateUserProfile(UpdateUserProfileDto dto);
 }

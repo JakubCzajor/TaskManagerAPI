@@ -163,4 +163,21 @@ public class AccountService : IAccountService
 
         return _mapper.Map<UserProfileDto>(user);
     }
+
+    public async Task UpdateUserProfile(UpdateUserProfileDto dto)
+    {
+        var userId = int.Parse(_userContextService.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var user = await _context
+            .Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+            throw new NotFoundException("User not found.");
+
+        user.FirstName = dto.FirstName;
+        user.LastName = dto.LastName;
+
+        await _context.SaveChangesAsync();
+    }
 }

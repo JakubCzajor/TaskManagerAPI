@@ -69,4 +69,13 @@ public class AccountController : ControllerBase
 
         return Ok(userDto);
     }
+
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<ActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDto dto)
+    {
+        await _accountService.UpdateUserProfile(dto);
+
+        return Ok();
+    }
 }
